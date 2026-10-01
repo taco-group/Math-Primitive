@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+results/
+runs/
+merged/
+wandb/
+.DS_Store
