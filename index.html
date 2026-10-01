@@ -3,28 +3,380 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The Missing Primitive</title>
-  <meta name="description" content="The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models">
-  <style>
-    :root { --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --link: #0969da; }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9198a1; --link: #4493f8; }
-    }
-    html, body { margin: 0; background: var(--bg); color: var(--fg); }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-           line-height: 1.5; }
-    main { max-width: 760px; margin: 0 auto; padding: 72px 16px; text-align: center; }
-    h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.25; margin: 0 0 16px; }
-    p { color: var(--muted); margin: 8px 0; }
-    a { color: var(--link); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-  </style>
+  <meta name="description" content="The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models. Prim benchmark and Absorb post-training.">
+  <meta property="og:title" content="The Missing Primitive"/>
+  <meta property="og:description" content="Diagnosing and repairing mathematical reasoning in LLMs with mathematical primitives: the Prim benchmark and Absorb post-training."/>
+  <meta property="og:url" content="https://taco-group.github.io/Math-Primitive/"/>
+  <meta name="twitter:card" content="summary">
+  <meta name="keywords" content="mathematical primitive, mathematical reasoning, LLM, benchmark, self-distillation, Prim, Absorb">
+
+  <title>The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models</title>
+  <link rel="icon" type="image/png" href="asset/pics/TACO_github.png">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script>
+    window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
-  <main>
-    <h1>The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models</h1>
-    <p>Project page coming soon.</p>
-    <p><a href="https://github.com/taco-group/Math-Primitive">Code on GitHub</a></p>
-  </main>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models</h1>
+
+            <!-- Paper authors: fill in when the author list is public.
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><a href="AUTHOR PAGE" target="_blank">Author Name</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="AUTHOR PAGE" target="_blank">Author Name</a><sup>1</sup></span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>Affiliation<br>Venue and year</span>
+            </div>
+            -->
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Paper link: uncomment when the arXiv version is out.
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/ARXIV_ID" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="ai ai-arxiv"></i></span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                -->
+                <span class="link-block">
+                  <a href="https://github.com/taco-group/Math-Primitive" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://huggingface.co/datasets/shuoxing/Prim" target="_blank" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">&#129303;</span>
+                    <span>Prim Benchmark</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#resources" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">&#129303;</span>
+                    <span>Models &amp; Data</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Teaser: the four dimensions of Prim -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <!-- To use the paper's teaser figure instead, add it as asset/pics/teaser.png and uncomment:
+        <img src="asset/pics/teaser.png" alt="Diagnosing and internalizing mathematical primitives"/>
+        -->
+        <div class="columns is-multiline is-centered dims">
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Discovery</p>
+              <p class="dim-map">\(\pi(x) \rightarrow \hat{p}\)</p>
+              <p>Find the primitive from the problem alone.</p>
+            </div>
+          </div>
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Generation</p>
+              <p class="dim-map">\(\pi(x) \rightarrow \hat{y}\)</p>
+              <p>Solve the problem directly.</p>
+            </div>
+          </div>
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Digestion</p>
+              <p class="dim-map">\(\pi(x, y) \rightarrow \hat{p}\)</p>
+              <p>Recover the primitive from a correct solution.</p>
+            </div>
+          </div>
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Execution</p>
+              <p class="dim-map">\(\pi(x, p) \rightarrow \hat{y}\)</p>
+              <p>Solve the problem once the primitive is given.</p>
+            </div>
+          </div>
+        </div>
+        <h2 class="subtitle has-text-centered">
+          <strong>Prim</strong> probes structural mathematical understanding along four dimensions, and
+          <strong>Absorb</strong> transfers primitive-guided reasoning into the model, with no primitive needed at inference time.
+        </h2>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Paper abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              While Large Language Models (LLMs) have demonstrated striking capabilities on frontier mathematical problems, it remains unclear whether they possess the structural mathematical understanding underlying their solutions. In this paper, we take a first step toward systematically studying mathematical understanding in LLMs, from diagnosing its distinct capabilities to leveraging these findings to improve post-training. First, we introduce the notion of Mathematical Primitive to probe structural mathematical understanding and propose <strong>Prim</strong>, a novel benchmark that evaluates mathematical reasoning along four distinct dimensions: Discovery, Generation, Digestion, and Execution.
+              Second, our systematic diagnosis shows that solution accuracy masks distinct capability profiles, primitives unlock substantial latent execution capacity, and Discovery is the dominant bottleneck in mathematical reasoning.
+              Our post-training analysis further shows that discovery-limited failures are particularly amenable to repair. Finally, building on these findings, we introduce <strong>Absorb</strong>, a primitive-privileged self-distillation framework that selectively transfers primitive-guided reasoning into the student model. Extensive experiments demonstrate that Absorb consistently improves mathematical reasoning over baselines across model scales and challenging benchmarks.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Mathematical Primitive -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3">Mathematical Primitive</h2>
+        <p>
+          A mathematical solution often begins before the first line of a proof, when an opaque problem is recognized through the structure that makes it solvable.
+          For a mathematical problem, a <strong>primitive</strong> is the essential conceptual observation that reveals <em>why</em> the problem can be solved. It captures the latent mathematical structure shared by the problem and its solution, such as an invariant, a theorem condition, a representation, a reduction, or a reformulation.
+          A primitive should be <strong>concise</strong>, <strong>problem-specific</strong>, and <strong>explanatory</strong>: it must make clear what property is being exploited and how that property unlocks the solution. It is <strong>not</strong> a routine calculation, a piece of generic advice, or a full proof.
+        </p>
+        <div class="box example-box">
+          <p class="example-label">Problem</p>
+          <p>Let \(L := \mathbb{Q}\left(\sqrt{(2+\sqrt{2})(3+\sqrt{3})},\ \sqrt{2},\ \sqrt{3}\right)\). What is the Galois group of \(L/\mathbb{Q}\)?</p>
+          <p class="example-label">Primitive (core concept)</p>
+          <p>The key idea is to track the added radical by its square class over the biquadratic base; preservation of that square class gives the lifts, and the orders of those lifts together with whether they commute are what pin down the isomorphism type.</p>
+          <p class="example-note">The full solution establishes the degree of the extension, constructs the lifted automorphisms explicitly, and computes their relations. The primitive is the structural idea that makes that derivation possible, not a shortened proof.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Prim benchmark -->
+  <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3">The Prim Benchmark</h2>
+        <p>
+          We build on Humanity's Last Exam, focusing on its text-only, free-form mathematics subset with exact-match evaluation. To reduce annotation noise, we draw from the Gold and Revision subsets of HLE-Verified and randomly sample 200 problems. For each problem, GPT-5.4 drafts a primitive from the problem, reference answer, and gold rationale. Three human experts with graduate-level training in mathematics independently review the primitive and verify the validity of the problem, answer, and rationale. This excludes 18 unsuitable problems, yielding a final evaluation set of <strong>182</strong> problems.
+        </p>
+        <p>
+          <strong>Primitive scoring.</strong> Each predicted primitive is judged against the expert-verified gold primitive, with the reference solution used only to recognize mathematically equivalent formulations. The judge decides whether the response is a valid primitive (\(V\)), whether it identifies the essential structure (\(\sigma_{\text{gate}}\)), and whether it explains how that structure enables the solution (\(\sigma_{\text{mech}}\)):
+        </p>
+        \[
+          \mathrm{Score} = V \cdot \sigma_{\text{gate}} \cdot \big(0.6 + 0.4\,\sigma_{\text{mech}}\big), \qquad
+          \mathrm{PrimitiveAcc} = \mathbf{1}\left[\mathrm{Score} \ge 0.8\right].
+        \]
+        <p>
+          Generation and Execution are scored by final-answer accuracy with the official HLE judge.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Diagnosis -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3">Diagnosing Mathematical Reasoning</h2>
+        <p>We evaluate 12 open- and closed-source models from three lineages on all four dimensions of Prim.</p>
+
+        <div class="table-container">
+          <table class="table is-narrow is-hoverable result-table">
+            <thead>
+              <tr>
+                <th class="has-text-left">Model</th>
+                <th>Discovery</th>
+                <th>Generation</th>
+                <th>Digestion <span class="delta">(Dig. &minus; Disc.)</span></th>
+                <th>Execution <span class="delta">(Exec. &minus; Gen.)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="group-row"><td colspan="5">OpenAI</td></tr>
+              <tr><td class="has-text-left">gpt-5.4</td><td>82.42</td><td>67.03</td><td>100.00 <span class="delta">(+17.58)</span></td><td>86.81 <span class="delta">(+19.78)</span></td></tr>
+              <tr><td class="has-text-left">gpt-5.4-mini</td><td>59.34</td><td>50.55</td><td>97.80 <span class="delta">(+38.46)</span></td><td>71.98 <span class="delta">(+21.43)</span></td></tr>
+              <tr><td class="has-text-left">gpt-5.4-nano</td><td>41.76</td><td>44.51</td><td>97.25 <span class="delta">(+55.49)</span></td><td>68.68 <span class="delta">(+24.17)</span></td></tr>
+              <tr><td class="has-text-left">gpt-oss-20B</td><td>34.62</td><td>43.41</td><td>91.21 <span class="delta">(+56.59)</span></td><td>60.99 <span class="delta">(+17.58)</span></td></tr>
+              <tr class="group-row"><td colspan="5">Qwen</td></tr>
+              <tr><td class="has-text-left">Qwen3.6-27B</td><td>24.73</td><td>52.75</td><td>92.31 <span class="delta">(+67.58)</span></td><td>78.57 <span class="delta">(+25.82)</span></td></tr>
+              <tr><td class="has-text-left">Qwen3.5-27B</td><td>28.57</td><td>47.80</td><td>93.41 <span class="delta">(+64.84)</span></td><td>71.98 <span class="delta">(+24.18)</span></td></tr>
+              <tr><td class="has-text-left">Qwen3.5-9B</td><td>13.19</td><td>38.46</td><td>79.67 <span class="delta">(+66.48)</span></td><td>61.54 <span class="delta">(+23.08)</span></td></tr>
+              <tr><td class="has-text-left">Qwen3.5-4B</td><td>6.59</td><td>26.37</td><td>70.88 <span class="delta">(+64.29)</span></td><td>56.04 <span class="delta">(+29.67)</span></td></tr>
+              <tr class="group-row"><td colspan="5">DeepSeek-R1 Distill</td></tr>
+              <tr><td class="has-text-left">R1-0528-8B</td><td>6.59</td><td>17.03</td><td>68.68 <span class="delta">(+62.09)</span></td><td>39.56 <span class="delta">(+22.53)</span></td></tr>
+              <tr><td class="has-text-left">R1-Distill-32B</td><td>6.04</td><td>18.13</td><td>65.38 <span class="delta">(+59.34)</span></td><td>43.41 <span class="delta">(+25.28)</span></td></tr>
+              <tr><td class="has-text-left">R1-Distill-14B</td><td>4.40</td><td>15.93</td><td>67.03 <span class="delta">(+62.63)</span></td><td>39.01 <span class="delta">(+23.08)</span></td></tr>
+              <tr><td class="has-text-left">R1-Distill-7B</td><td>7.14</td><td>13.19</td><td>48.90 <span class="delta">(+41.76)</span></td><td>32.42 <span class="delta">(+19.23)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="content has-text-centered"><strong>Table 1.</strong> <em>Overall performance on the four dimensions of Prim.</em></div>
+
+        <ul>
+          <li><strong>Answer accuracy masks distinct capability profiles.</strong> Models with similar Generation accuracy can differ sharply in Discovery: Qwen3.6-27B and gpt-5.4-mini solve problems at a comparable rate yet differ by over 30 points in Discovery.</li>
+          <li><strong>Correct primitives unlock latent execution capacity.</strong> Providing the gold primitive improves accuracy by 17.58 to 29.67 points across all 12 models. A teacher-written primitive also helps far more than a step-by-step teacher plan, so the gain comes from exposing the load-bearing structure, not from task decomposition.</li>
+          <li><strong>Independent Discovery is the dominant bottleneck.</strong> Models recover the primitive from a correct solution far better than they find it alone; for example, Qwen3.6-27B rises from 24.73% Discovery to 92.31% Digestion. 83.6% of all Generation failures come with a failed Discovery.</li>
+          <li><strong>Discovery-limited failures are repairable.</strong> After post-training, SFT and OPSD repair 20.4% and 21.1% of failures where the model cannot find the primitive but can execute it once given, about three times their repair rates on failures where it can do neither.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Absorb -->
+  <section class="hero is-small is-light">
+    <div class="hero-body">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3">Absorb: Internalizing Primitive-Guided Reasoning</h2>
+        <!-- To show the method figure, add it as asset/pics/absorb.png and uncomment:
+        <img src="asset/pics/absorb.png" alt="Illustration of Absorb" class="center-img"/>
+        -->
+        <p>
+          Absorb is an on-policy self-distillation method built on two design choices motivated by the diagnosis.
+        </p>
+        <ul>
+          <li><strong>Primitives as privileged information.</strong> The primitive conditions the teacher rather than serving as a prediction target for the student. Teacher and student share the same base model; the student generates its own solution from the problem alone, and the primitive-conditioned teacher provides token-level supervision along that trajectory. Compared with full reference proofs, primitives supply the missing structural information without prescribing execution steps the student can already perform.</li>
+          <li><strong>Bounded override.</strong> When the privileged teacher prefers a choice more than the student does, this positive guidance is transferred in full. When the teacher strongly suppresses a choice the student favors, the pressure is bounded, since that disagreement may come from information the student cannot access.</li>
+        </ul>
+        <p>
+          With \(\mathcal{S}_t\) the teacher's top-\(K\) token support at step \(t\), and \(\bar{\pi}_S\), \(\bar{\pi}_T\) the student and primitive-conditioned teacher distributions renormalized over \(\mathcal{S}_t\), Absorb minimizes a reverse KL with a one-sided clamp:
+        </p>
+        \[
+          \mathcal{L}_{\text{Absorb}} = \frac{1}{T}\sum_{t=1}^{T} \sum_{v\in\mathcal{S}_t}
+          \min\left\{ \bar{\pi}_S(v \mid \hat{y}_{&lt;t}, x)\, \log \frac{\bar{\pi}_S(v \mid \hat{y}_{&lt;t}, x)}{\bar{\pi}_T(v \mid \hat{y}_{&lt;t}, x, p)},\ \tau \right\}.
+        \]
+        <p>
+          The student never sees a primitive at inference time. Training uses 709 mathematics Ph.D. qualifying-exam proof problems, each paired with a human-written proof and a one-sentence primitive.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Absorb results -->
+  <section class="hero is-small">
+    <div class="hero-body">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3">Results</h2>
+        <p>
+          Absorb consistently outperforms SFT and OPSD across Qwen3.5 model scales and benchmarks. It improves Generation at all three scales, including a 5.49-point gain at 9B, where SFT and OPSD lower Generation by 6.04 and 4.95 points. The gains concentrate in downstream reasoning rather than explicit Discovery: the structural guidance of the primitive is reflected in the model's unassisted reasoning.
+        </p>
+
+        <div class="table-container">
+          <table class="table is-narrow is-hoverable result-table">
+            <thead>
+              <tr>
+                <th rowspan="2" class="has-text-left">Model</th>
+                <th colspan="2">Prim</th>
+                <th rowspan="2">HLE Math</th>
+                <th rowspan="2">HMMT25</th>
+                <th rowspan="2">Omni-MATH</th>
+                <th rowspan="2">Avg.</th>
+              </tr>
+              <tr><th>Discovery</th><th>Generation</th></tr>
+            </thead>
+            <tbody>
+              <tr class="base-row"><td class="has-text-left">Qwen3.5-4B</td><td>6.59</td><td>26.37</td><td>26.70</td><td>76.67</td><td>78.00</td><td>51.94</td></tr>
+              <tr><td class="has-text-left">+ SFT</td><td>5.49 <span class="delta">(&minus;1.10)</span></td><td>25.27 <span class="delta">(&minus;1.10)</span></td><td>27.36 <span class="delta">(+0.65)</span></td><td>83.33 <span class="delta">(+6.66)</span></td><td>79.33 <span class="delta">(+1.33)</span></td><td>53.82 <span class="delta">(+1.89)</span></td></tr>
+              <tr><td class="has-text-left">+ OPSD</td><td>8.79 <span class="delta">(+2.20)</span></td><td>30.22 <span class="delta">(+3.85)</span></td><td>29.58 <span class="delta">(+2.88)</span></td><td>83.33 <span class="delta">(+6.66)</span></td><td>79.33 <span class="delta">(+1.33)</span></td><td>55.62 <span class="delta">(+3.68)</span></td></tr>
+              <tr class="absorb-row"><td class="has-text-left"><strong>+ Absorb</strong></td><td><strong>9.89</strong> <span class="delta">(+3.30)</span></td><td><strong>31.32</strong> <span class="delta">(+4.95)</span></td><td><strong>31.02</strong> <span class="delta">(+4.32)</span></td><td>83.33 <span class="delta">(+6.66)</span></td><td><strong>80.00</strong> <span class="delta">(+2.00)</span></td><td><strong>56.42</strong> <span class="delta">(+4.48)</span></td></tr>
+
+              <tr class="base-row"><td class="has-text-left">Qwen3.5-9B</td><td>13.19</td><td>38.46</td><td>35.60</td><td>90.00</td><td>78.67</td><td>60.68</td></tr>
+              <tr><td class="has-text-left">+ SFT</td><td>12.64 <span class="delta">(&minus;0.55)</span></td><td>32.42 <span class="delta">(&minus;6.04)</span></td><td>34.55 <span class="delta">(&minus;1.05)</span></td><td>90.00 <span class="delta">(+0.00)</span></td><td>80.67 <span class="delta">(+2.00)</span></td><td>59.41 <span class="delta">(&minus;1.27)</span></td></tr>
+              <tr><td class="has-text-left">+ OPSD</td><td>10.99 <span class="delta">(&minus;2.20)</span></td><td>33.52 <span class="delta">(&minus;4.95)</span></td><td>35.08 <span class="delta">(&minus;0.52)</span></td><td>90.00 <span class="delta">(+0.00)</span></td><td>81.33 <span class="delta">(+2.67)</span></td><td>59.98 <span class="delta">(&minus;0.70)</span></td></tr>
+              <tr class="absorb-row"><td class="has-text-left"><strong>+ Absorb</strong></td><td><strong>14.29</strong> <span class="delta">(+1.10)</span></td><td><strong>43.96</strong> <span class="delta">(+5.49)</span></td><td><strong>38.35</strong> <span class="delta">(+2.75)</span></td><td><strong>93.33</strong> <span class="delta">(+3.33)</span></td><td><strong>82.00</strong> <span class="delta">(+3.33)</span></td><td><strong>64.41</strong> <span class="delta">(+3.73)</span></td></tr>
+
+              <tr class="base-row"><td class="has-text-left">Qwen3.5-27B</td><td><strong>28.57</strong></td><td>47.80</td><td>42.67</td><td>96.67</td><td>87.33</td><td>68.62</td></tr>
+              <tr><td class="has-text-left">+ SFT</td><td>28.02 <span class="delta">(&minus;0.55)</span></td><td>48.35 <span class="delta">(+0.55)</span></td><td>43.59 <span class="delta">(+0.92)</span></td><td>96.67 <span class="delta">(+0.00)</span></td><td>86.67 <span class="delta">(&minus;0.67)</span></td><td>68.82 <span class="delta">(+0.20)</span></td></tr>
+              <tr><td class="has-text-left">+ OPSD</td><td><strong>28.57</strong> <span class="delta">(+0.00)</span></td><td>44.51 <span class="delta">(&minus;3.30)</span></td><td>42.80 <span class="delta">(+0.13)</span></td><td>96.67 <span class="delta">(+0.00)</span></td><td>88.00 <span class="delta">(+0.67)</span></td><td>67.99 <span class="delta">(&minus;0.62)</span></td></tr>
+              <tr class="absorb-row"><td class="has-text-left"><strong>+ Absorb</strong></td><td>28.02 <span class="delta">(&minus;0.55)</span></td><td><strong>48.90</strong> <span class="delta">(+1.10)</span></td><td><strong>46.60</strong> <span class="delta">(+3.93)</span></td><td><strong>100.00</strong> <span class="delta">(+3.33)</span></td><td><strong>88.67</strong> <span class="delta">(+1.33)</span></td><td><strong>71.04</strong> <span class="delta">(+2.42)</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="content has-text-centered"><strong>Table 2.</strong> <em>Comparison of SFT, OPSD, and Absorb across three Qwen3.5 model scales. HMMT25 and Omni-MATH report pass@4; Avg. is computed over the four Generation columns.</em></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Resources -->
+  <section class="hero is-small is-light" id="resources">
+    <div class="hero-body">
+      <div class="container is-max-desktop content">
+        <h2 class="title is-3">Models and Data</h2>
+        <div class="table-container">
+          <table class="table is-narrow resource-table">
+            <thead><tr><th>Release</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://huggingface.co/datasets/shuoxing/Prim" target="_blank">&#129303; Prim</a></td><td>182 research-level problems with gold answers, reference solutions, and expert-verified primitives</td></tr>
+              <tr><td><a href="https://huggingface.co/datasets/shuoxing/math-phd-qual-709" target="_blank">&#129303; math-phd-qual-709</a></td><td>709 Ph.D. qualifying-exam proof problems with proofs and primitives, the Absorb training set</td></tr>
+              <tr><td><a href="https://huggingface.co/shuoxing/qwen-3.5-4b-absorb" target="_blank">&#129303; qwen-3.5-4b-absorb</a></td><td>Qwen3.5-4B trained with Absorb</td></tr>
+              <tr><td><a href="https://huggingface.co/shuoxing/qwen-3.5-9b-absorb" target="_blank">&#129303; qwen-3.5-9b-absorb</a></td><td>Qwen3.5-9B trained with Absorb</td></tr>
+              <tr><td><a href="https://huggingface.co/shuoxing/qwen-3.5-27b-absorb" target="_blank">&#129303; qwen-3.5-27b-absorb</a></td><td>Qwen3.5-27B trained with Absorb</td></tr>
+              <tr><td><a href="https://github.com/taco-group/Math-Primitive" target="_blank"><i class="fab fa-github"></i> Math-Primitive</a></td><td>Prim inference, judging, and scoring, and Absorb training code</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Evaluate a model on all four dimensions of Prim, then score it:</p>
+        <pre><code>git clone https://github.com/taco-group/Math-Primitive &amp;&amp; cd Math-Primitive
+pip install -r requirements.txt
+bash eval/run_all.sh shuoxing/qwen-3.5-9b-absorb qwen-3.5-9b-absorb
+export OPENAI_API_KEY=...        # the judges run on the OpenAI API
+bash eval/judge_all.sh results/qwen-3.5-9b-absorb</code></pre>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- BibTeX: uncomment and fill in when the paper is public.
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{primitive2026,
+  title   = {The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models},
+  author  = {AUTHORS},
+  journal = {arXiv preprint arXiv:ARXIV_ID},
+  year    = {2026}
+}</code></pre>
+    </div>
+  </section>
+  -->
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+              You are free to borrow the source code of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
+              Commons Attribution-ShareAlike 4.0 International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
