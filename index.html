@@ -35,15 +35,28 @@
           <div class="column has-text-centered">
             <h1 class="title is-1 publication-title">The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models</h1>
 
-            <!-- Paper authors: fill in when the author list is public.
             <div class="is-size-5 publication-authors">
-              <span class="author-block"><a href="AUTHOR PAGE" target="_blank">Author Name</a><sup>1</sup>,</span>
-              <span class="author-block"><a href="AUTHOR PAGE" target="_blank">Author Name</a><sup>1</sup></span>
+              <span class="author-block"><a href="https://shuoxing98.github.io/" target="_blank">Shuo Xing</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="https://seas.harvard.edu/person/zilin-dai" target="_blank">Zilin Dai</a><sup>2</sup>,</span>
+              <span class="author-block"><a href="https://github.com/cyqian97" target="_blank">Chengyuan Qian</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="https://ark1234.github.io/" target="_blank">Fangzhou Lin</a><sup>1</sup>,</span>
+              <span class="author-block"><a href="https://momofodr.github.io/" target="_blank">Wenjing Chen</a><sup>1</sup>,</span><br>
+              <span class="author-block"><a href="https://geobrownmotion.github.io/" target="_blank">Ping He</a><sup>3</sup>,</span>
+              <span class="author-block"><a href="https://lupantech.github.io/" target="_blank">Pan Lu</a><sup>4</sup>,</span>
+              <span class="author-block"><a href="https://scholar.google.com/citations?user=1g3pA4cAAAAJ&hl=en" target="_blank">Alvaro Velasquez</a><sup>5</sup>,</span>
+              <span class="author-block"><a href="https://www.cs.unc.edu/~mbansal/" target="_blank">Mohit Bansal</a><sup>6</sup>,</span>
+              <span class="author-block"><a href="https://vztu.github.io/" target="_blank">Zhengzhong Tu</a><sup>1</sup><sup>*</sup></span>
             </div>
+
             <div class="is-size-5 publication-authors">
-              <span class="author-block"><sup>1</sup>Affiliation<br>Venue and year</span>
+              <span class="author-block"><sup>1</sup>Texas A&amp;M University,</span>
+              <span class="author-block"><sup>2</sup>Harvard University,</span>
+              <span class="author-block"><sup>3</sup>Vanderbilt University,</span><br>
+              <span class="author-block"><sup>4</sup>Stanford University,</span>
+              <span class="author-block"><sup>5</sup>DARPA,</span>
+              <span class="author-block"><sup>6</sup>University of North Carolina at Chapel Hill</span>
+              <span class="eql-cntrb"><small><br><sup>*</sup>Corresponding author</small></span>
             </div>
-            -->
 
             <div class="column has-text-centered">
               <div class="publication-links">
@@ -347,19 +360,35 @@ bash eval/judge_all.sh results/qwen-3.5-9b-absorb</code></pre>
   </section>
 
 
-  <!-- BibTeX: uncomment and fill in when the paper is public.
+  <!-- Conclusion -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Conclusion</h2>
+          <div class="content has-text-justified">
+            <p>
+              We introduced the notion of Mathematical Primitive and <strong>Prim</strong>, a benchmark for systematically evaluating structural mathematical understanding in LLMs across Discovery, Generation, Digestion, and Execution. Our diagnosis reveals that similar solution accuracy can mask markedly different capability profiles, correct primitives can unlock substantial latent execution capacity, and independent Discovery constitutes a dominant bottleneck in mathematical reasoning. We further show that discovery-limited failures are substantially more amenable to post-training, while existing methods can introduce regressions on problems the model already solves. Building on these findings, we proposed <strong>Absorb</strong>, a primitive-privileged post-training paradigm that selectively transfers primitive-guided reasoning through a bounded override mechanism. Experiments on challenging mathematical reasoning benchmarks show that Absorb consistently improves over strong post-training baselines. Overall, our results highlight the value of explicitly diagnosing structural mathematical understanding and leveraging this structure to improve LLM reasoning.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- BibTeX citation (last section). Update the entry, e.g. the arXiv ID, when the paper is public. -->
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>@article{primitive2026,
+      <pre><code>@article{xing2026missing,
   title   = {The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models},
-  author  = {AUTHORS},
-  journal = {arXiv preprint arXiv:ARXIV_ID},
+  author  = {Xing, Shuo and Dai, Zilin and Qian, Chengyuan and Lin, Fangzhou and Chen, Wenjing and He, Ping and Lu, Pan and Velasquez, Alvaro and Bansal, Mohit and Tu, Zhengzhong},
+  journal = {arXiv preprint},
   year    = {2026}
 }</code></pre>
     </div>
   </section>
-  -->
 
 
   <footer class="footer">
