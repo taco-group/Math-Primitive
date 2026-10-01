@@ -354,7 +354,7 @@ checkpoint layout (vision tower included), which vLLM needs.
 | LoRA | rank 64, alpha 128, dropout 0.05, on all attention and MLP projections incl. the linear-attention projections (`q/k/v/o_proj`, `gate/up/down_proj`, `in_proj_qkv/a/b/z`, `out_proj`) |
 | Optimizer | fused AdamW, no weight decay, lr 5e-6, linear schedule, no warmup, gradient clipping 0.1 |
 | Batch | per-device 1, effective 32 via gradient accumulation |
-| Length | one epoch |
+| Epochs | 1 |
 | Objective | top-K support K = 128, clamp τ = 0.06 (`--beta 1 --top_k_loss 128 --jsd_token_clip 0.06`), fully on-policy (`--lmbda 1`), fixed teacher |
 | Rollouts | 1 per problem, temperature 1.0, top-p 0.95, top-k 20, max 4096 completion tokens, context 6144 |
 | Chat mode | non-thinking for student and teacher |
