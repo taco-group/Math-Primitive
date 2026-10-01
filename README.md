@@ -378,8 +378,8 @@ The models are fine-tuned from Qwen3.5 and follow its Apache-2.0 license.
 ## 🙏 Acknowledgements
 
 We build on [OPSD](https://github.com/siyan-zhao/OPSD), [TRL](https://github.com/huggingface/trl),
-[vLLM](https://github.com/vllm-project/vllm), the Qwen3.5 models,
-[Humanity's Last Exam](https://lastexam.ai) and HLE-Verified.
+[vLLM](https://github.com/vllm-project/vllm), [Humanity's Last Exam](https://lastexam.ai) and
+[HLE-Verified](https://huggingface.co/datasets/skylenage-ai/HLE-Verified).
 
 ## 📖 Citation
 We are more than happy if this code is helpful to your work. If you use our code or extend our work, please consider citing our paper:
