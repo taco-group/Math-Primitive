@@ -1,31 +1,68 @@
 # The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models
 
-Code, data and models for the paper. We study whether LLMs understand the structure behind the
-problems they solve, through the **Mathematical Primitive**: the essential conceptual observation
-that reveals *why* a problem can be solved, such as an invariant, a theorem condition, a
-representation, a reduction or a reformulation. A primitive is concise, problem-specific and
-explanatory. It is not a routine calculation, a piece of generic advice or a full proof.
 
-This repository releases:
+This repository provides the **Prim** benchmark, its evaluation and scoring pipelines, and the **Absorb** training pipeline of the paper [The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models](https://taco-group.github.io/Math-Primitive/).
 
-- **Prim**, a benchmark of 182 research-level problems from Humanity's Last Exam, each paired with
-  an expert-verified mathematical primitive.
-- **Absorb**, a primitive-privileged self-distillation method. The teacher is the model itself
-  conditioned on the primitive, and a bounded override transfers its guidance into the student,
-  which never sees a primitive at inference time.
-- **Absorb models** trained from Qwen3.5-4B, 9B and 27B on 709 mathematics Ph.D. qualifying-exam problems.
+<div id="top" align="center">
 
-## Release at a glance
+[![](https://img.shields.io/badge/Project%20Page-8A2BE2)](https://taco-group.github.io/Math-Primitive/)
+![Code License](https://img.shields.io/badge/Code%20License-Apache%202.0-brightgreen)
+[![Prim](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Prim-yellow)](https://huggingface.co/datasets/shuoxing/Prim)
+[![Absorb](https://img.shields.io/badge/%F0%9F%A4%97%20Models-Absorb-yellow)](#-model)
+<!-- Uncomment when the arXiv version is out:
+[![arXiv](https://img.shields.io/badge/arXiv-ARXIV_ID-b31b1b.svg)](https://arxiv.org/abs/ARXIV_ID)
+-->
 
-| Artifact | Hugging Face | What it is |
+</div>
+
+<div align="center">
+  <img src="assets/pics/teaser.png" alt="teaser" width="800"/>
+  <p><em>Figure 1. Outline of our work: (i) A <b>mathematical primitive</b> is the essential structural observation that reveals <i>why</i> a problem can be solved; (ii) <b>Prim</b> decomposes mathematical understanding into four dimensions: Discovery, Generation, Digestion and Execution; (iii) <b>Absorb</b> internalizes primitive-guided reasoning: a primitive-conditioned teacher supervises the student's own reasoning, and the student needs no primitive at inference time.</em></p>
+</div>
+
+## 🔍 Key Highlights
+
+- **Mathematical Primitives and the Prim Benchmark:** A primitive is the concise, problem-specific observation that reveals *why* a problem can be solved, such as an invariant, a theorem condition, a representation, a reduction or a reformulation. Prim pairs 182 research-level problems from Humanity's Last Exam with expert-verified primitives and evaluates four dimensions: **Discovery** π(x) → p̂, **Generation** π(x) → ŷ, **Digestion** π(x, y) → p̂ and **Execution** π(x, p) → ŷ.
+
+- **Answer Accuracy Masks Distinct Capability Profiles:** Models with similar Generation accuracy can differ by over 30 points in Discovery. Across 12 open- and closed-source models, providing the gold primitive raises accuracy by 17.6 to 29.7 points, so a large part of execution capacity is latent.
+
+- **Discovery Is the Dominant Bottleneck:** Models recover the primitive from a correct solution far better than they find it alone (Qwen3.6-27B: 24.7% Discovery vs. 92.3% Digestion), and 83.6% of Generation failures come with a failed Discovery. Discovery-limited failures are about three times more repairable by post-training than failures where the model can neither discover nor execute.
+
+- **Absorb Repairs Reasoning without Primitives at Inference:** Absorb is a primitive-privileged self-distillation method. The teacher is the model itself conditioned on the primitive, a bounded override transfers its guidance along the student's own trajectory, and the student never sees a primitive at inference time. Absorb consistently outperforms SFT and OPSD across Qwen3.5-4B/9B/27B on Prim, HLE Math, HMMT25 and Omni-MATH.
+
+## 📰 News
+- **[2026/09/30]** 🔥We released **The Missing Primitive**, together with the **Prim** benchmark, the **Absorb** training code and the Absorb models on Hugging Face. Explore our [website](https://taco-group.github.io/Math-Primitive/) for more details.
+
+
+## 🚀 Installation
+
+```bash
+git clone https://github.com/taco-group/Math-Primitive.git
+cd Math-Primitive
+conda create -n absorb python=3.13 -y
+conda activate absorb
+pip install -r requirements.txt          # or requirements-lock.txt for the exact environment we used
+```
+
+Inference needs only `vllm`, `openai`, `datasets` and `pydantic`. Training needs the full stack.
+`trl==1.7.0` matters: the trainer imports `trl.experimental.gold.GOLDConfig`, which moved
+between TRL versions.
+
+Set these environment variables before running the corresponding steps:
+
+| Variable | Needed for | Required? |
 |---|---|---|
-| Prim | [`shuoxing/Prim`](https://huggingface.co/datasets/shuoxing/Prim) | 182 HLE math problems, gold answers, expert-verified primitives |
-| math-phd-qual-709 | [`shuoxing/math-phd-qual-709`](https://huggingface.co/datasets/shuoxing/math-phd-qual-709) | 709 qualifying-exam proof problems, human-written proofs, primitives (Absorb training set) |
-| qwen-3.5-4b-absorb | [`shuoxing/qwen-3.5-4b-absorb`](https://huggingface.co/shuoxing/qwen-3.5-4b-absorb) | Qwen3.5-4B + Absorb |
-| qwen-3.5-9b-absorb | [`shuoxing/qwen-3.5-9b-absorb`](https://huggingface.co/shuoxing/qwen-3.5-9b-absorb) | Qwen3.5-9B + Absorb |
-| qwen-3.5-27b-absorb | [`shuoxing/qwen-3.5-27b-absorb`](https://huggingface.co/shuoxing/qwen-3.5-27b-absorb) | Qwen3.5-27B + Absorb |
+| `OPENAI_API_KEY` | Scoring: `eval/judge_answer.py`, `eval/judge_primitive.py` and `eval/judge_all.sh` call the OpenAI API (`o3-mini-2025-01-31` and `gpt-5.4`) | Yes, for scoring. Judging is billed to this key. |
+| `PRIM_API_KEY` | Inference against a hosted, OpenAI-compatible model instead of a local vLLM server | Only in that case. Local vLLM needs no key. |
 
-## Repository layout
+```bash
+export OPENAI_API_KEY=...     # scoring
+export PRIM_API_KEY=...       # optional: inference on a hosted model
+```
+
+Inference on a local vLLM server and training need no API key.
+
+## 🗂️ Repository Layout
 
 ```
 Math-Primitive/
@@ -50,39 +87,25 @@ Math-Primitive/
 │   ├── accelerate_opsd.yaml   #   DeepSpeed ZeRO-2 config
 │   ├── run_absorb.sh          #   the training recipe (SIZE=4B|9B|27B)
 │   └── merge_lora.py          #   merge a LoRA checkpoint for vLLM serving
+├── assets/pics/               # figures
 ├── requirements.txt           # key version pins
 └── requirements-lock.txt      # full pip freeze of the environment we used
 ```
 
-## Installation
+## 📦 Data
 
-```bash
-conda create -n absorb python=3.13 -y
-conda activate absorb
-pip install -r requirements.txt          # or requirements-lock.txt for the exact environment
-```
+We release two datasets on Hugging Face:
 
-Inference needs only `vllm`, `openai`, `datasets` and `pydantic`. Training needs the full stack.
-`trl==1.7.0` matters: the trainer imports `trl.experimental.gold.GOLDConfig`, which moved
-between TRL versions.
-
-### API keys
-
-Set these environment variables before running the corresponding steps:
-
-| Variable | Needed for | Required? |
+| Dataset | Hugging Face | What it is |
 |---|---|---|
-| `OPENAI_API_KEY` | Scoring: `eval/judge_answer.py`, `eval/judge_primitive.py`, `eval/judge_all.sh` call the OpenAI API (`o3-mini-2025-01-31` and `gpt-5.4`) | Yes, for scoring. Judging is billed to this key. |
-| `PRIM_API_KEY` | Inference against a hosted, OpenAI-compatible model instead of a local vLLM server | Only in that case. Local vLLM needs no key. |
+| Prim | [`shuoxing/Prim`](https://huggingface.co/datasets/shuoxing/Prim) | 182 HLE math problems with gold answers, reference solutions and expert-verified primitives (evaluation) |
+| math-phd-qual-709 | [`shuoxing/math-phd-qual-709`](https://huggingface.co/datasets/shuoxing/math-phd-qual-709) | 709 Ph.D. qualifying-exam proof problems with human-written proofs and primitives (Absorb training set) |
 
-```bash
-export OPENAI_API_KEY=...     # scoring
-export PRIM_API_KEY=...       # optional: inference on a hosted model
+```python
+from datasets import load_dataset
+prim  = load_dataset("shuoxing/Prim", split="test")                   # 182 rows
+quals = load_dataset("shuoxing/math-phd-qual-709", split="train")    # 709 rows
 ```
-
-Inference on a local vLLM server and training need no API key.
-
-## Data
 
 Both datasets contain only the fields below; `solution` and `family` exist only in Prim, where
 Digestion and the per-family breakdown need them.
@@ -101,12 +124,6 @@ Digestion and the per-family breakdown need them.
 }
 ```
 
-```python
-from datasets import load_dataset
-prim  = load_dataset("shuoxing/Prim", split="test")                   # 182 rows
-quals = load_dataset("shuoxing/math-phd-qual-709", split="train")    # 709 rows
-```
-
 **Prim.** We sample 200 text-only, free-form (`exactMatch`) math problems from the Gold and
 Revision subsets of HLE-Verified. GPT-5.4 drafts a primitive for each problem from the problem,
 reference answer and gold rationale. Three human experts with graduate-level training in
@@ -123,20 +140,22 @@ human-authored proof (median 118 words). The primitive was extracted from that p
 same curation prompt as Prim. Absorb conditions the teacher on `primitive.core_concept`, a
 one-sentence primitive.
 
-## Models
+## 🤗 Model
 
-| Model | Base model (pinned revision) |
-|---|---|
-| `qwen-3.5-4b-absorb` | `Qwen/Qwen3.5-4B` @ `851bf6e8` |
-| `qwen-3.5-9b-absorb` | `Qwen/Qwen3.5-9B` @ `c2022362` |
-| `qwen-3.5-27b-absorb` | `Qwen/Qwen3.5-27B` @ `fc05daec` |
+We release our **Absorb** models trained from three Qwen3.5 base models (_Qwen3.5-4B_, _Qwen3.5-9B_, _Qwen3.5-27B_) on Hugging Face:
+
+| Model | Hugging Face | Base model (pinned revision) |
+|---|---|---|
+| qwen-3.5-4b-absorb | [`shuoxing/qwen-3.5-4b-absorb`](https://huggingface.co/shuoxing/qwen-3.5-4b-absorb) | `Qwen/Qwen3.5-4B` @ `851bf6e8` |
+| qwen-3.5-9b-absorb | [`shuoxing/qwen-3.5-9b-absorb`](https://huggingface.co/shuoxing/qwen-3.5-9b-absorb) | `Qwen/Qwen3.5-9B` @ `c2022362` |
+| qwen-3.5-27b-absorb | [`shuoxing/qwen-3.5-27b-absorb`](https://huggingface.co/shuoxing/qwen-3.5-27b-absorb) | `Qwen/Qwen3.5-27B` @ `fc05daec` |
 
 Each model is the base checkpoint with the Absorb LoRA merged into the language tower, after one
 epoch over the 709 training problems. The layout is unchanged
 (`Qwen3_5ForConditionalGeneration`, vision tower copied as is), so every tool that serves the
 base model serves these.
 
-Serving notes:
+**Serving notes:**
 
 - Serve with vLLM and **do not pass `--reasoning-parser`**. The scripts read the thinking trace
   and the answer from `message.content`, and a reasoning parser moves them elsewhere.
@@ -147,7 +166,7 @@ Serving notes:
   `generation_config.json` (temperature 0.6, top-p 0.95, top-k 20). The eval scripts do not
   override these, which matches how the models were evaluated.
 
-## Evaluation on Prim
+## 📊 Evaluation
 
 Prim decomposes mathematical reasoning into four dimensions. With problem *x*, primitive *p* and
 solution *y*: **Discovery** π(x) → p̂, **Generation** π(x) → ŷ, **Digestion** π(x, y) → p̂ and
@@ -205,7 +224,7 @@ python eval/digestion.py  --model qwen-3.5-9b-absorb --base-url http://localhost
 
 ### Scoring
 
-Judging calls the OpenAI API and needs `OPENAI_API_KEY` (see [API keys](#api-keys)). The inference
+Judging calls the OpenAI API and needs `OPENAI_API_KEY` (see [Installation](#-installation)). The inference
 scripts never use that key.
 
 ```bash
@@ -244,7 +263,7 @@ The Discovery, Digestion and Execution prompts and the structured-output schema 
 `eval/prompts.py`; the HLE answer-format prompt is in `eval/common.py`. The Absorb teacher and
 student prompts are in `train/data_collator.py`.
 
-## Training (Absorb)
+## 🏋️ Training
 
 ### Method
 
@@ -318,7 +337,7 @@ must divide 32). Training runs one epoch and saves the LoRA adapter to
 `runs/absorb_qwen3.5-<size>/`. Extra arguments are passed through to `opsd_train.py`, for
 example `--vllm_gpu_memory_utilization 0.35` if the colocated engine runs out of memory.
 
-Then merge the adapter and evaluate the merged model:
+Then merge the adapter and evaluate the merged model on Prim (see [Evaluation](#-evaluation)):
 
 ```bash
 python merge_lora.py <base snapshot dir> runs/absorb_qwen3.5-9b merged/absorb-9b
@@ -350,14 +369,26 @@ of the primitive:
 SIZE=9B NGPU=4 bash run_absorb.sh --privilege_style solution --run_config opsd_qwen3.5-9b
 ```
 
-## License
+## 📄 License
 
 Code is released under the Apache-2.0 license (see `LICENSE`). `train/opsd_trainer.py`,
 `train/opsd_train.py` and `train/data_collator.py` are modified from OPSD and TRL (Apache-2.0).
 The models are fine-tuned from Qwen3.5 and follow its Apache-2.0 license.
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 We build on [OPSD](https://github.com/siyan-zhao/OPSD), [TRL](https://github.com/huggingface/trl),
 [vLLM](https://github.com/vllm-project/vllm), the Qwen3.5 models,
 [Humanity's Last Exam](https://lastexam.ai) and HLE-Verified.
+
+## 📖 Citation
+We are more than happy if this code is helpful to your work. If you use our code or extend our work, please consider citing our paper:
+
+```bibtex
+@article{xing2026missing,
+    title={The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models},
+    author={Xing, Shuo and Dai, Zilin and Qian, Chengyuan and Lin, Fangzhou and Chen, Wenjing and He, Ping and Lu, Pan and Velasquez, Alvaro and Bansal, Mohit and Tu, Zhengzhong},
+    journal={arXiv preprint},
+    year={2026},
+}
+```
