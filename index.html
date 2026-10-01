@@ -95,46 +95,15 @@
   </section>
 
 
-  <!-- Teaser: the four dimensions of Prim -->
+  <!-- Teaser -->
   <section class="hero teaser">
     <div class="container is-max-desktop">
       <div class="hero-body">
-        <!-- To use the paper's teaser figure instead, add it as asset/pics/teaser.png and uncomment:
-        <img src="asset/pics/teaser.png" alt="Diagnosing and internalizing mathematical primitives"/>
-        -->
-        <div class="columns is-multiline is-centered dims">
-          <div class="column is-half-tablet is-one-quarter-desktop">
-            <div class="box dim-card">
-              <p class="dim-name">Discovery</p>
-              <p class="dim-map">\(\pi(x) \rightarrow \hat{p}\)</p>
-              <p>Find the primitive from the problem alone.</p>
-            </div>
-          </div>
-          <div class="column is-half-tablet is-one-quarter-desktop">
-            <div class="box dim-card">
-              <p class="dim-name">Generation</p>
-              <p class="dim-map">\(\pi(x) \rightarrow \hat{y}\)</p>
-              <p>Solve the problem directly.</p>
-            </div>
-          </div>
-          <div class="column is-half-tablet is-one-quarter-desktop">
-            <div class="box dim-card">
-              <p class="dim-name">Digestion</p>
-              <p class="dim-map">\(\pi(x, y) \rightarrow \hat{p}\)</p>
-              <p>Recover the primitive from a correct solution.</p>
-            </div>
-          </div>
-          <div class="column is-half-tablet is-one-quarter-desktop">
-            <div class="box dim-card">
-              <p class="dim-name">Execution</p>
-              <p class="dim-map">\(\pi(x, p) \rightarrow \hat{y}\)</p>
-              <p>Solve the problem once the primitive is given.</p>
-            </div>
-          </div>
-        </div>
-        <h2 class="subtitle has-text-centered">
-          <strong>Prim</strong> probes structural mathematical understanding along four dimensions, and
-          <strong>Absorb</strong> transfers primitive-guided reasoning into the model, with no primitive needed at inference time.
+        <a href="asset/pics/primitive-teaser.pdf" target="_blank">
+          <img src="asset/pics/primitive-teaser.png" alt="Diagnosing and internalizing mathematical primitives" class="center-img"/>
+        </a>
+        <h2 class="subtitle has-text-centered teaser-caption">
+          <strong>Diagnosing and internalizing mathematical primitives.</strong> We introduce Mathematical Primitives to probe structural mathematical understanding in LLMs across four dimensions: Discovery, Generation, Digestion, and Execution. Our diagnosis further motivates <strong>Absorb</strong>, which selectively transfers primitive-guided reasoning into the student without requiring primitives at inference time.
         </h2>
       </div>
     </div>
@@ -188,7 +157,40 @@
       <div class="container is-max-desktop content">
         <h2 class="title is-3">The Prim Benchmark</h2>
         <p>
-          We build on Humanity's Last Exam, focusing on its text-only, free-form mathematics subset with exact-match evaluation. To reduce annotation noise, we draw from the Gold and Revision subsets of HLE-Verified and randomly sample 200 problems. For each problem, GPT-5.4 drafts a primitive from the problem, reference answer, and gold rationale. Three human experts with graduate-level training in mathematics independently review the primitive and verify the validity of the problem, answer, and rationale. This excludes 18 unsuitable problems, yielding a final evaluation set of <strong>182</strong> problems.
+          Taking the mathematical primitive as the unit of structural understanding, Prim decomposes mathematical reasoning into four complementary dimensions. Let \(x\) be the problem, \(p\) its primitive, \(y\) a complete solution, and \(\pi\) the model.
+        </p>
+        <div class="columns is-multiline is-centered dims">
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Discovery</p>
+              <p class="dim-map">\(\pi(x) \rightarrow \hat{p}\)</p>
+              <p>Find the primitive from the problem alone.</p>
+            </div>
+          </div>
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Generation</p>
+              <p class="dim-map">\(\pi(x) \rightarrow \hat{y}\)</p>
+              <p>Solve the problem directly.</p>
+            </div>
+          </div>
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Digestion</p>
+              <p class="dim-map">\(\pi(x, y) \rightarrow \hat{p}\)</p>
+              <p>Recover the primitive from a correct solution.</p>
+            </div>
+          </div>
+          <div class="column is-half-tablet is-one-quarter-desktop">
+            <div class="box dim-card">
+              <p class="dim-name">Execution</p>
+              <p class="dim-map">\(\pi(x, p) \rightarrow \hat{y}\)</p>
+              <p>Solve the problem once the primitive is given.</p>
+            </div>
+          </div>
+        </div>
+        <p>
+          <strong>Data curation.</strong> We build on Humanity's Last Exam, focusing on its text-only, free-form mathematics subset with exact-match evaluation. To reduce annotation noise, we draw from the Gold and Revision subsets of HLE-Verified and randomly sample 200 problems. For each problem, GPT-5.4 drafts a primitive from the problem, reference answer, and gold rationale. Three human experts with graduate-level training in mathematics independently review the primitive and verify the validity of the problem, answer, and rationale. This excludes 18 unsuitable problems, yielding a final evaluation set of <strong>182</strong> problems.
         </p>
         <p>
           <strong>Primitive scoring.</strong> Each predicted primitive is judged against the expert-verified gold primitive, with the reference solution used only to recognize mathematically equivalent formulations. The judge decides whether the response is a valid primitive (\(V\)), whether it identifies the essential structure (\(\sigma_{\text{gate}}\)), and whether it explains how that structure enables the solution (\(\sigma_{\text{mech}}\)):
