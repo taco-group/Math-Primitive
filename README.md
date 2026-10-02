@@ -5,13 +5,11 @@ This repository provides the **Prim** benchmark, its evaluation and scoring pipe
 
 <div id="top" align="center">
 
+[![arXiv](https://img.shields.io/badge/arXiv-2610.02191-b31b1b.svg)](https://arxiv.org/abs/2610.02191)
 [![](https://img.shields.io/badge/Project%20Page-8A2BE2)](https://taco-group.github.io/Math-Primitive/)
 ![Code License](https://img.shields.io/badge/Code%20License-Apache%202.0-brightgreen)
 [![Prim](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-Prim-yellow)](https://huggingface.co/datasets/shuoxing/Prim)
 [![Absorb](https://img.shields.io/badge/%F0%9F%A4%97%20Models-Absorb-yellow)](#-model)
-<!-- Uncomment when the arXiv version is out:
-[![arXiv](https://img.shields.io/badge/arXiv-ARXIV_ID-b31b1b.svg)](https://arxiv.org/abs/ARXIV_ID)
--->
 
 </div>
 
@@ -388,7 +386,7 @@ We are more than happy if this code is helpful to your work. If you use our code
 @article{xing2026missing,
     title={The Missing Primitive: Diagnosing and Repairing Mathematical Reasoning in Large Language Models},
     author={Xing, Shuo and Dai, Zilin and Qian, Chengyuan and Lin, Fangzhou and Chen, Wenjing and He, Ping and Lu, Pan and Velasquez, Alvaro and Bansal, Mohit and Tu, Zhengzhong},
-    journal={arXiv preprint},
+    journal={arXiv:2610.02191},
     year={2026},
 }
 ```
